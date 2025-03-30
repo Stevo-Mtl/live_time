@@ -28,10 +28,50 @@
       border-radius: 10px;
       font-size: 1.5em;
     }
+    #tram-visual {
+      position: absolute;
+      bottom: 10%;
+      left: 5%;
+      width: 90%;
+      height: 80px;
+      background: #444;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+    .tram-icon {
+      width: 40px;
+      height: 40px;
+      background: yellow;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .rail-line {
+      position: absolute;
+      bottom: 50px;
+      left: 5%;
+      width: 90%;
+      height: 10px;
+      background: #222;
+      z-index: -1;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <div id="tram-times">Loading tram times...</div>
+  <div class="rail-line"></div>
+  <div id="tram-visual">
+    <div class="tram-icon">1</div>
+    <div class="tram-icon">2</div>
+    <div class="tram-icon">3</div>
+  </div>
 
   <script>
     function formatTime(date) {
@@ -48,8 +88,16 @@
       document.getElementById('tram-times').innerHTML = '<strong>Next 3 trams:</strong><br>' + times.map(formatTime).join('<br>');
     }
 
+    function getRefreshInterval() {
+      const now = new Date();
+      const hour = now.getHours();
+      // Daytime: 6 AM to 11 PM — refresh every 1 minute
+      // Night time: 11 PM to 6 AM — refresh every 10 minutes
+      return (hour >= 23 || hour < 6) ? 10 * 60 * 1000 : 1 * 60 * 1000;
+    }
+
     getFakeTramTimes();
-    setInterval(getFakeTramTimes, 60000); // refresh every 60 seconds
+    setInterval(getFakeTramTimes, getRefreshInterval());
   </script>
 </body>
 </html>
